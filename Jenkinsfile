@@ -6,28 +6,33 @@ pipeline {
                 checkout([$class: 'GitSCM',
                           branches: [[name: '*/main']],
                           userRemoteConfigs: [[url: 'https://github.com/Hamhunter23/PES1UG22CS215_Jenkins.git']]])
-            }
-        }
+                
         stage('Build') {
             steps {
-                build 'PES1UG22CS215-1'
-                sh 'g++ hello.cpp -o output'
+                script {
+                    sh 'g++ -o PES1UG22CS215-1 main.cpp' // Compiles C++ file
+                }
             }
         }
+        
         stage('Test') {
             steps {
-                sh './output'
+                script {
+                    sh './PES1UG22CS215-1' // Runs the compiled file
+                }
             }
         }
+        
         stage('Deploy') {
             steps {
-                echo 'deploy'
+                echo "Deploying the application..."
             }
         }
     }
+    
     post {
         failure {
-            echo 'Pipeline failed'
+            echo 'Pipeline failed' // Post action in case of failure
         }
     }
 }
